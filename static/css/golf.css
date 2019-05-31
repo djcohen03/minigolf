@@ -1,0 +1,71 @@
+
+:root {
+    --body-background: #7896a2;
+    --screen-margin: 60px;
+
+    --putting-green: rgb(84, 154, 90);
+    --putting-green-border: 10px solid brown;
+
+    --putting-hole-color: #000;
+    --golf-ball-color: #fff;
+    --tee-color: rgb(50, 105, 55);
+    --aimer-color: #ddd;
+
+    --hole-size: 30px;
+    --ball-size: 20px;
+    --aimer-size: 8px;
+
+
+}
+
+body {
+    background: var(--body-background);
+}
+
+.mini-golf-box {
+    position: fixed;
+    top: var(--screen-margin);
+    left: var(--screen-margin);
+    right: var(--screen-margin);
+    bottom: var(--screen-margin);
+
+    border: var(--putting-green-border);
+    background-color: var(--putting-green);
+}
+
+.mini-golf-tee {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 120px;
+    width: 120px;
+    background: var(--tee-color);
+}
+
+
+.mini-golf-hole {
+    display: none;
+    position: absolute;
+    width: var(--hole-size);
+    height: var(--hole-size);
+    border-radius: var(--hole-size);
+    background: var(--putting-hole-color);
+}
+
+.mini-golf-ball {
+    display: none;
+    position: absolute;
+    width: var(--ball-size);
+    height: var(--ball-size);
+    border-radius: var(--ball-size);
+    background: var(--golf-ball-color);
+}
+
+.mini-golf-ball-aimers > div {
+    display: none;
+    position: absolute;
+    background: var(--aimer-color);
+    width: var(--aimer-size);
+    height: var(--aimer-size);
+    border-radius: var(--aimer-size);
+}
