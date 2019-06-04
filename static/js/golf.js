@@ -56,6 +56,8 @@ function stationaryObject(selector) {
 
 
 function Game() {
+    this.numberOfHoles = 6;
+
     // Select some moveable objects:
     this.hole = moveableObject('.mini-golf-hole');
     this.ball = moveableObject('.mini-golf-ball');
@@ -225,8 +227,7 @@ function Game() {
     }
 
 
-    this.awaitCompletion = (shots, complete) => {
-        console.log(`Taking shot number ${shots}`)
+    this.awaitHoleCompletion = (shots, complete) => {
         this.awaitShot((isInHole) => {
             if (isInHole) {
                 // The ball went in, so call the completion callback with the
@@ -238,33 +239,50 @@ function Game() {
             } else {
                 // The ball is not yet in, so recursively call this function:
                 shots = shots + 1;
-                this.awaitCompletion(shots, complete);
+                this.awaitHoleCompletion(shots, complete);
             }
+        });
+    }
+
+    this.playHole = (holeNumber, complete) => {
+
+        // Put the hole in a randomly selected spot:
+        var holeX = randRange(0.3, 0.95) * this.green.width;
+        var holeY = randRange(0.05, 0.95) * this.green.height;
+        this.hole.set(holeX, holeY);
+
+        // Wait for the user to set the ball:
+        this.setBall(() => {
+
+            // Wait for the user to complete the hole:
+            this.awaitHoleCompletion(1, (shots) => {
+
+                // Todo: store this game's information somewhere:
+                console.log(`Finished hole ${holeNumber} in ${shots} Shots`);
+
+                holeNumber += 1;
+                if (holeNumber <= this.numberOfHoles) {
+                    // Play the next hole after a few seconds delay:
+                    setTimeout(() => this.playHole(holeNumber, complete), 1500);
+
+                } else {
+                    // Game Over:
+                    setTimeout(complete, 1500);
+
+                }
+
+            });
         });
     }
 
 
     this.start = () => {
-        // Set the hole in a new random spot:
-        var holeX = randRange(0.3, 0.95) * this.green.width;
-        var holeY = randRange(0.05, 0.95) * this.green.height;
-        this.hole.set(holeX, holeY);
 
-        var playHole = () => {
-            this.setBall(() => {
-                this.awaitCompletion(0, (shots) => {
-                    console.log(`Finished in ${shots} Shots`);
-                    setTimeout(() => {
-                        var holeX = randRange(0.3, 0.95) * this.green.width;
-                        var holeY = randRange(0.05, 0.95) * this.green.height;
-                        this.hole.set(holeX, holeY);
-                        playHole();
+        // Game Over Handler:
+        var gameOver = () => console.log('Game Over');
 
-                    }, 1500);
-                });
-            });
-        }
-        playHole()
+        //
+        this.playHole(1, gameOver);
 
     }
 
